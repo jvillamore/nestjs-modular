@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { Order } from '../entities/order.entity';
 import { ProductsService } from 'src/services/products.service';
+const API_KEY = '21345456';
 
 @Injectable()
 export class UsersService {
