@@ -48,7 +48,6 @@ export class ProductsController {
     // });
     return this.productsService.findOne(productId);
   }
-
   @Post()
   create(@Body() payload: CreateProductDto) {
     // return {
