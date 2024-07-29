@@ -5,18 +5,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
-
-const API_KEY = '21345456';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
-  imports: [UsersModule, ProductsModule],
+  imports: [UsersModule, ProductsModule, DatabaseModule, HttpModule],
   controllers: [AppController],
+  exports: ['TASKS'],
   providers: [
     AppService,
-    {
-      provide: 'API_KEY',
-      useValue: API_KEY,
-    },
     {
       provide: 'TASKS',
       useFactory: async (http: HttpService) => {
