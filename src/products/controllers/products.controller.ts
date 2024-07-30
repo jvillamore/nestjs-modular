@@ -9,23 +9,33 @@ import {
   Delete,
   HttpStatus,
   HttpCode,
-  Res,
+  //Res,
   // ParseIntPipe,
 } from '@nestjs/common';
 
-import { Response } from 'express';
+//import { Response } from 'express';
 import { ParseIntPipe } from '../../common/parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../dtos/products.dtos';
 
 import { ProductsService } from './../services/products.service';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiBody,
+  ApiOkResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Método para obtener la lista de productos' })
   getProducts(
-    @Query('limit') limit = 100,
+    @Query('limit')
+    limit = 100,
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
@@ -36,11 +46,22 @@ export class ProductsController {
   }
 
   @Get('filter')
+  @ApiOperation({
+    summary: 'Método para obtener la lista de productos con el nombre "Filter"',
+  })
   getProductFilter() {
     return `yo soy un filter`;
   }
 
   @Get(':productId')
+  @ApiOperation({
+    summary: 'Método para obtener un producto filtrado por el campo IdProducto',
+  })
+  @ApiParam({
+    name: 'productId',
+    description: 'Identificador del producto',
+    type: 'number',
+  })
   @HttpCode(HttpStatus.ACCEPTED)
   getOne(@Param('productId', ParseIntPipe) productId: number) {
     // response.status(200).send({
@@ -49,6 +70,9 @@ export class ProductsController {
     return this.productsService.findOne(productId);
   }
   @Post()
+  @ApiOperation({ summary: 'Método POST para crear un producto' })
+  @ApiBody({ type: CreateProductDto })
+  @ApiOkResponse({ type: CreateProductDto })
   create(@Body() payload: CreateProductDto) {
     // return {
     //   message: 'accion de crear',
@@ -58,11 +82,16 @@ export class ProductsController {
   }
 
   @Put(':id')
+  @ApiOperation({ summary: 'Método PUT para editar un producto' })
   update(@Param('id') id: string, @Body() payload: UpdateProductDto) {
     return this.productsService.update(+id, payload);
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary:
+      'Método DELETE para eliminar un producto por su identificador único',
+  })
   delete(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }
