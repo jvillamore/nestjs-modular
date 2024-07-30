@@ -32,5 +32,8 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-#V Variables de entorno
+#Variables de entorno
 *.env
+# Postgres
+/postgres_data
+/mysql_data
