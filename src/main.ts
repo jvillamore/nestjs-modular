@@ -18,6 +18,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
+  // Para generar de nuevo la documentación ejecutar
+  // rm -rf dist
 
   await app.listen(3000);
 }
