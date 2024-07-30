@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import * as Joi from 'joi';
+import { Client } from 'pg';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,6 +13,18 @@ import { DatabaseModule } from './database/database.module';
 import { enviroments } from 'enviroments';
 import config from 'config';
 
+const client = new Client({
+  host: 'localhost',
+  port: 5433,
+  database: 'my_db',
+  user: 'postgres',
+  password: 'postgres',
+});
+client.connect();
+client.query('SELECT * FROM tasks', (err, res) => {
+  console.log(err);
+  console.log(res.rows);
+});
 @Module({
   imports: [
     ConfigModule.forRoot({

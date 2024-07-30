@@ -1,0 +1,21 @@
+# Instalación de librerias
+npm i -g @nestjs/cli
+npm i class-validator class-transformer @nestjs/mapped-types
+
+Actualización RXJS
+npm uninstall rxjs
+npm i rxjs
+
+Instalación de swagger
+npm install --save @nestjs/swagger
+
+Instalación de axios
+npm i --save @nestjs/axios axios
+
+Instalación de postgres
+npm i pg
+npm i @types/pg
+
+
+
+
