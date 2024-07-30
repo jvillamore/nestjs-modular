@@ -13,3 +13,11 @@ services:
       - '5433:5432'
     volumes:
       - /home/jvillafuerte/Documents/Docker/postgres_typeorm:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - '5050:80'
