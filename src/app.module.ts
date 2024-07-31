@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import * as Joi from 'joi';
-import { Client } from 'pg';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -13,18 +12,6 @@ import { DatabaseModule } from './database/database.module';
 import { enviroments } from 'enviroments';
 import config from 'config';
 
-const client = new Client({
-  host: 'localhost',
-  port: 5433,
-  database: 'my_db',
-  user: 'postgres',
-  password: 'postgres',
-});
-client.connect();
-client.query('SELECT * FROM tasks', (err, res) => {
-  console.log(err);
-  console.log(res.rows);
-});
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,6 +22,12 @@ client.query('SELECT * FROM tasks', (err, res) => {
         API_KEY: Joi.string().required(),
         DATABASE_NAME: Joi.string().required(),
         DATABASE_PORT: Joi.number().required(),
+        // Variables para la conexión a postgres
+        POSTGRES_DB: Joi.string().required(),
+        POSTGRES_USER: Joi.string().required(),
+        POSTGRES_PASSWORD: Joi.string().required(),
+        POSTGRES_PORT: Joi.number().required(),
+        POSTGRES_HOST: Joi.string().hostname().required(),
       }),
     }),
     UsersModule,

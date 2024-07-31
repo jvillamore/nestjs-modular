@@ -11,7 +11,7 @@ import {
 
 import { UsersService } from '../services/users.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('users')
 @Controller('users')
@@ -21,6 +21,11 @@ export class UsersController {
   @Get()
   findAll() {
     return this.usersService.findAll();
+  }
+  @ApiOperation({ summary: 'Método para obtener la lista tareas' })
+  @Get('tasks')
+  getTasks() {
+    return this.usersService.getTasks();
   }
 
   @Get(':id')
