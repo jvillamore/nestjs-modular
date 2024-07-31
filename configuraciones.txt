@@ -16,6 +16,16 @@ Instalación de postgres
 npm i pg
 npm i @types/pg
 
+Para actualizar las librerias
+
+npm install -g npm-check-updates
+ncu -u
+npm install
+
+
+Instalación del typeORM
+npm install --save @nestjs/typeorm typeorm
+
 
 
 
