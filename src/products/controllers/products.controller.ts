@@ -83,8 +83,11 @@ export class ProductsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Método PUT para editar un producto' })
-  update(@Param('id') id: string, @Body() payload: UpdateProductDto) {
-    return this.productsService.update(+id, payload);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: UpdateProductDto,
+  ) {
+    return this.productsService.update(id, payload);
   }
 
   @Delete(':id')
@@ -92,7 +95,7 @@ export class ProductsController {
     summary:
       'Método DELETE para eliminar un producto por su identificador único',
   })
-  delete(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.productsService.remove(id);
   }
 }

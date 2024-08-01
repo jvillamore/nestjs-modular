@@ -21,13 +21,13 @@ export class Product {
   @Column({
     comment: 'Price of product',
     type: 'decimal',
-    length: 10,
-    precision: 2,
+    scale: 2,
+    precision: 10,
   })
   price: number;
   @Column({
     comment: 'Stock of product',
-    type: 'int64',
+    type: 'bigint',
   })
   stock: number;
   @Column({
