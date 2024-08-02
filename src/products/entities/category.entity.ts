@@ -6,7 +6,7 @@ export class Category {
   id: number;
   @Column({
     comment: "Category's name",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })

@@ -5,19 +5,19 @@ export class Customer {
   id: number;
   @Column({
     comment: "Customer' name",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
   })
   name: string;
   @Column({
     comment: "Customer's lastname",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
   })
   lastName: string;
   @Column({
     comment: "Customer's Phone number",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
   })
   phone: string;

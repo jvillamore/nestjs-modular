@@ -9,6 +9,8 @@ const API_KEY = '21345456';
 @Global()
 @Module({
   imports: [
+    /*
+    //Consiguración para postgres
     TypeOrmModule.forRootAsync({
       // 👈 use TypeOrmModule
       inject: [config.KEY],
@@ -16,6 +18,25 @@ const API_KEY = '21345456';
         const { user, host, database, password, port } = configService.postgres;
         return {
           type: 'postgres',
+          host,
+          port,
+          username: user,
+          password,
+          database,
+          synchronize: true,
+          autoLoadEntities: true,
+        };
+      },
+    }),
+    */
+    TypeOrmModule.forRootAsync({
+      // 👈 use TypeOrmModule
+      inject: [config.KEY],
+      useFactory: (configService: ConfigType<typeof config>) => {
+        const { user, host, database, password, port } = configService.mysql;
+        console.log(configService.mysql);
+        return {
+          type: 'mysql',
           host,
           port,
           username: user,

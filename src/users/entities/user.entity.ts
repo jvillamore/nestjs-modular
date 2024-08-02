@@ -6,21 +6,21 @@ export class User {
   id: number;
   @Column({
     comment: "User's mail address",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   email: string;
   @Column({
     comment: "User's password",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   password: string;
   @Column({
     comment: "User's role",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })

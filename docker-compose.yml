@@ -21,3 +21,23 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=root
     ports:
       - '5050:80'
+
+  mysql_typeorm:
+    image: mysql
+    environment:
+      - MYSQL_DATABASE=my_db
+      - MYSQL_USER=mysql
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_PASSWORD=mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - /home/jvillafuerte/Documents/Docker/mysql_typeorm:/var/lib/mysql
+
+  phpmyadmin_typeorm:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - PMA_HOST=mysql
+    ports:
+      - '8080:80'

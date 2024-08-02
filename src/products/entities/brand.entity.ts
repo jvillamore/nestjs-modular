@@ -6,14 +6,14 @@ export class Brand {
   id: number;
   @Column({
     comment: "Brand's name",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   name: string;
   @Column({
     comment: 'Brand image URL',
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
   })
   image: string;

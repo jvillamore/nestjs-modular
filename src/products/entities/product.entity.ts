@@ -6,14 +6,14 @@ export class Product {
   id: number;
   @Column({
     comment: "Product's name",
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })
   name: string;
   @Column({
     comment: 'Product description',
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
     unique: true,
   })
@@ -32,7 +32,7 @@ export class Product {
   stock: number;
   @Column({
     comment: 'Product image URL',
-    type: 'character varying',
+    type: 'varchar',
     length: 255,
   })
   image: string;
