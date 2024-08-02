@@ -2,36 +2,36 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn({ comment: 'Unique identificador from product' })
+  @PrimaryGeneratedColumn({ comment: 'Unique ID of the product table' })
   id: number;
   @Column({
-    comment: 'Name of product',
+    comment: "Product's name",
     type: 'character varying',
     length: 255,
     unique: true,
   })
   name: string;
   @Column({
-    comment: 'Description of product',
+    comment: 'Product description',
     type: 'character varying',
     length: 255,
     unique: true,
   })
   description: string;
   @Column({
-    comment: 'Price of product',
+    comment: 'Product price',
     type: 'decimal',
     scale: 2,
     precision: 10,
   })
   price: number;
   @Column({
-    comment: 'Stock of product',
+    comment: 'Product stock',
     type: 'bigint',
   })
   stock: number;
   @Column({
-    comment: 'URL image of product',
+    comment: 'Product image URL',
     type: 'character varying',
     length: 255,
   })

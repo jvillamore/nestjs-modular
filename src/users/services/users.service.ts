@@ -1,37 +1,19 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import { Order } from '../entities/order.entity';
-import { ProductsService } from 'src/products/services/products.service';
-import { Client } from 'pg';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    private productService: ProductsService,
-    private configService: ConfigService,
-    @Inject('PG') private clientPg: Client,
-  ) {}
-  private counterId = 1;
-  private users: User[] = [
-    {
-      id: 1,
-      email: 'correo@mail.com',
-      password: '12345',
-      role: 'admin',
-    },
-  ];
+  constructor(@InjectRepository(User) private customerRep: Repository<User>) {}
 
   findAll() {
-    const apikey = this.configService.get('API_KEY');
-    const dbName = this.configService.get('DATABASE_NAME');
-    console.log(apikey, dbName);
-    return this.users;
+    return this.customerRep.find();
   }
 
   findOne(id: number) {
-    const user = this.users.find((item) => item.id === id);
+    const user = this.customerRep.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
     }
@@ -39,47 +21,39 @@ export class UsersService {
   }
 
   create(data: CreateUserDto) {
-    this.counterId = this.counterId + 1;
-    const newUser = {
-      id: this.counterId,
-      ...data,
-    };
-    this.users.push(newUser);
-    return newUser;
+    const newCustomer = this.customerRep.create(data);
+    return this.customerRep.save(newCustomer).catch((error) => {
+      throw new NotFoundException(error.detail);
+    });
   }
 
-  update(id: number, changes: UpdateUserDto) {
-    const user = this.findOne(id);
-    const index = this.users.findIndex((item) => item.id === id);
-    this.users[index] = {
-      ...user,
-      ...changes,
-    };
-    return this.users[index];
+  async update(id: number, changes: UpdateUserDto) {
+    // Busca el registro
+    const customer = await this.customerRep.findOneBy({ id });
+    // Actualiza el registro.
+    this.customerRep.merge(customer, changes);
+    // Guarda los cambios.
+    return this.customerRep.save(customer).catch((error) => {
+      throw new NotFoundException(error.detail);
+    });
   }
 
-  remove(id: number) {
-    const index = this.users.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new NotFoundException(`User #${id} not found`);
-    }
-    this.users.splice(index, 1);
-    return true;
+  async remove(id: number) {
+    const customer = await this.findOne(id);
+    if (!customer) throw new NotFoundException(`Customer #${id} not found`);
+    return this.customerRep.delete(id).catch((error) => {
+      throw new NotFoundException(error.detail);
+    });
   }
   async getOrderByUser(id: number) {
     const user = this.findOne(id);
     return {
       date: new Date(),
       user,
-      products: await this.productService.findAll(),
+      products: await this.customerRep.find(),
     };
   }
   getTasks() {
-    return new Promise((resolve, reject) => {
-      this.clientPg.query('SELECT * FROM tasks', (err, res) => {
-        if (err) reject(err);
-        resolve(res.rows);
-      });
-    });
+    return this.customerRep.find();
   }
 }
