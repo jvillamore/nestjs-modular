@@ -9,7 +9,6 @@ const API_KEY = '21345456';
 @Global()
 @Module({
   imports: [
-    /*
     //Consiguración para postgres
     TypeOrmModule.forRootAsync({
       // 👈 use TypeOrmModule
@@ -28,7 +27,8 @@ const API_KEY = '21345456';
         };
       },
     }),
-    */
+    // Configuración con MySQL
+    /*
     TypeOrmModule.forRootAsync({
       // 👈 use TypeOrmModule
       inject: [config.KEY],
@@ -47,6 +47,7 @@ const API_KEY = '21345456';
         };
       },
     }),
+    */
   ],
   providers: [
     {
