@@ -9,7 +9,7 @@ export const dataSourceOptions: DataSourceOptions = {
   logging: true,
   synchronize: false,
   entities: ['src/**/*.entity.ts'],
-  migrations: ['src/database/postgres/migrations/*.ts'],
+  migrations: ['src/database/migrations/*.ts'],
   migrationsTableName: 'migrations',
 };
 const AppDataSource = new DataSource(dataSourceOptions);

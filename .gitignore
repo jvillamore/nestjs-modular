@@ -37,3 +37,4 @@ lerna-debug.log*
 # Postgres
 /postgres_data
 /mysql_data
+database/migrations/

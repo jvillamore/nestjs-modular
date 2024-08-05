@@ -19,10 +19,16 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm-ts-node-commonjs -d ./src/database/data-source.ts",
-    "migrations:generate": "npm run typeorm -- migration:generate",
-    "migrations:run": "npm run typeorm -- migration:run",
-    "migrations:drop": "npm run typeorm -- schema:drop"
+    "typeorm": "NODE_OPTIONS=--max_old_space_size=8192 ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migrations:clean": "rimraf database/migrations/*",
+    "migrations:generate": "npx typeorm-ts-node-commonjs migration:generate -p -d src/database/data-source.ts src/database/migration",
+    "migrations:run": "npm run typeorm -- migration:run -d src/database/data-source.ts",
+    "migrations:show": "npm run typeorm -- migration:show -d src/database/data-source.ts",
+    "migrations:drop": "npm run typeorm -- schema:drop -d src/database/data-source.ts",
+    "migrations:revert": "npm run typeorm -- migration:revert -d src/database/data-source.ts",
+    "seeds:create": "npm run typeorm -- migration:create",
+    "seeds:run": "npm run typeorm -- migration:run -d ormconfig-seed.ts",
+    "schema:drop": "npm run typeorm -- schema:drop -d src/database/data-source.ts"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.2",
