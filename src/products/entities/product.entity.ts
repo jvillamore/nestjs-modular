@@ -1,9 +1,16 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn({ comment: 'Unique ID of the product table' })
   id: number;
+
   @Column({
     comment: "Product's name",
     type: 'varchar',
@@ -11,6 +18,7 @@ export class Product {
     unique: true,
   })
   name: string;
+
   @Column({
     comment: 'Product description',
     type: 'varchar',
@@ -18,6 +26,7 @@ export class Product {
     unique: true,
   })
   description: string;
+
   @Column({
     comment: 'Product price',
     type: 'decimal',
@@ -25,15 +34,31 @@ export class Product {
     precision: 10,
   })
   price: number;
+
   @Column({
     comment: 'Product stock',
     type: 'bigint',
   })
   stock: number;
+
   @Column({
     comment: 'Product image URL',
     type: 'varchar',
     length: 255,
   })
   image: string;
+
+  @CreateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: 'Fecha de creación del registro',
+  })
+  createAt: Date;
+
+  @UpdateDateColumn({
+    type: 'timestamptz',
+    default: () => 'CURRENT_TIMESTAMP',
+    comment: 'Fecha de actualización del registro',
+  })
+  updateAt: Date;
 }
