@@ -1,39 +1,47 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from '../entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User } from '../entities/user.entity';
+import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
+import { CustomersService } from './customers.service';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private customerRep: Repository<User>) {}
+  constructor(
+    @InjectRepository(User) private userRepo: Repository<User>,
+    private customerService: CustomersService,
+  ) {}
 
   findAll() {
-    return this.customerRep.find();
+    return this.userRepo.find({ relations: ['customer'] });
   }
 
   findOne(id: number) {
-    const user = this.customerRep.findOneBy({ id });
+    const user = this.userRepo.findOneBy({ id });
     if (!user) {
       throw new NotFoundException(`User #${id} not found`);
     }
     return user;
   }
 
-  create(data: CreateUserDto) {
-    const newCustomer = this.customerRep.create(data);
-    return this.customerRep.save(newCustomer).catch((error) => {
+  async create(data: CreateUserDto) {
+    const newUser = this.userRepo.create(data);
+    if (data.customerId) {
+      const customer = await this.customerService.findOne(data.customerId);
+      newUser.customer = customer;
+    }
+    return this.userRepo.save(newUser).catch((error) => {
       throw new NotFoundException(error.detail);
     });
   }
 
   async update(id: number, changes: UpdateUserDto) {
     // Busca el registro
-    const customer = await this.customerRep.findOneBy({ id });
+    const customer = await this.userRepo.findOneBy({ id });
     // Actualiza el registro.
-    this.customerRep.merge(customer, changes);
+    this.userRepo.merge(customer, changes);
     // Guarda los cambios.
-    return this.customerRep.save(customer).catch((error) => {
+    return this.userRepo.save(customer).catch((error) => {
       throw new NotFoundException(error.detail);
     });
   }
@@ -41,7 +49,7 @@ export class UsersService {
   async remove(id: number) {
     const customer = await this.findOne(id);
     if (!customer) throw new NotFoundException(`Customer #${id} not found`);
-    return this.customerRep.delete(id).catch((error) => {
+    return this.userRepo.delete(id).catch((error) => {
       throw new NotFoundException(error.detail);
     });
   }
@@ -50,10 +58,10 @@ export class UsersService {
     return {
       date: new Date(),
       user,
-      products: await this.customerRep.find(),
+      products: await this.userRepo.find(),
     };
   }
   getTasks() {
-    return this.customerRep.find();
+    return this.userRepo.find();
   }
 }
