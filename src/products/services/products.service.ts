@@ -4,15 +4,19 @@ import { Repository } from 'typeorm';
 
 import { Product } from './../entities/product.entity';
 import { CreateProductDto, UpdateProductDto } from './../dtos/products.dtos';
+import { BrandsService } from './brands.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productRep: Repository<Product>,
+    private brandsService: BrandsService,
   ) {}
 
   findAll() {
-    return this.productRep.find();
+    return this.productRep.find({
+      relations: ['brand'],
+    });
   }
 
   async findOne(id: number) {
@@ -23,7 +27,7 @@ export class ProductsService {
     return product;
   }
 
-  create(data: CreateProductDto) {
+  async create(data: CreateProductDto) {
     // const newProduct = new Product();
     // newProduct.description = data.description;
     // newProduct.image = data.image;
@@ -32,6 +36,10 @@ export class ProductsService {
     // newProduct.stock = data.stock;
     // Crea el objeto en base al DTO.
     const newProduct = this.productRep.create(data);
+    if (data.brandId) {
+      const brand = await this.brandsService.findOne(data.brandId);
+      newProduct.brand = brand;
+    }
     return this.productRep.save(newProduct).catch((error) => {
       throw new NotFoundException(error.detail);
     });
@@ -40,6 +48,10 @@ export class ProductsService {
   async update(id: number, changes: UpdateProductDto) {
     // Busca el producto
     const product = await this.productRep.findOneBy({ id });
+    if (changes.brandId) {
+      const brand = await this.brandsService.findOne(changes.brandId);
+      product.brand = brand;
+    }
     // Actualiza el registro.
     this.productRep.merge(product, changes);
     // Guarda los cambios.

@@ -4,7 +4,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
+import { Brand } from './brand.entity';
 
 @Entity()
 export class Product {
@@ -51,14 +53,17 @@ export class Product {
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
-    comment: 'Fecha de creación del registro',
+    comment: 'Record creation date',
   })
   createAt: Date;
 
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
-    comment: 'Fecha de actualización del registro',
+    comment: 'Record update date',
   })
   updateAt: Date;
+
+  @ManyToOne(() => Brand, (brand) => brand.products)
+  brand: Brand;
 }
