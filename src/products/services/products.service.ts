@@ -78,4 +78,37 @@ export class ProductsService {
       throw new NotFoundException(error.detail);
     });
   }
+
+  async removeCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRep.findOne({
+      where: { id: productId },
+      relations: { categories: true },
+    });
+    if (!product)
+      throw new NotFoundException(`Product #${productId} not found`);
+    if (product.categories)
+      product.categories = product.categories.filter(
+        (category) => category.id != categoryId,
+      );
+    return this.productRep.save(product).catch((error) => {
+      throw new NotFoundException(error.detail);
+    });
+  }
+
+  async addCategoryByProduct(productId: number, categoryId: number) {
+    const product = await this.productRep.findOne({
+      where: { id: productId },
+      relations: { categories: true },
+    });
+    if (!product)
+      throw new NotFoundException(`Product #${productId} not found`);
+    if (product.categories) {
+      const category = await this.categoryRep.findOneBy({ id: categoryId });
+      //product.categories?? Category[];
+      product.categories.push(category);
+    }
+    return this.productRep.save(product).catch((error) => {
+      throw new NotFoundException(error.detail);
+    });
+  }
 }
