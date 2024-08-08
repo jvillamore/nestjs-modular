@@ -2,11 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
+import { Order } from './order.entity';
 @Entity()
 export class Customer {
   @PrimaryGeneratedColumn({ comment: 'Unique ID of the customer table' })
@@ -17,12 +19,14 @@ export class Customer {
     length: 255,
   })
   name: string;
+
   @Column({
     comment: "Customer's lastname",
     type: 'varchar',
     length: 255,
   })
   lastName: string;
+
   @Column({
     comment: "Customer's Phone number",
     type: 'varchar',
@@ -46,4 +50,7 @@ export class Customer {
 
   @OneToOne(() => User, (user) => user.customer, { nullable: true })
   user: User;
+
+  @OneToMany(() => Order, (order) => order.customer)
+  orders: Order[];
 }
