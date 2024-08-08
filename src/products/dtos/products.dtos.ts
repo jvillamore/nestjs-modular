@@ -7,6 +7,7 @@ import {
   IsArray,
   IsOptional,
   Min,
+  ValidateIf,
 } from 'class-validator';
 import { PartialType, ApiProperty } from '@nestjs/swagger';
 
@@ -55,10 +56,21 @@ export class FilterProductsDto {
   @ApiProperty({ description: 'Filter limit' })
   @IsOptional()
   @IsPositive()
-  limit: number;
+  readonly limit: number;
 
   @ApiProperty({ description: 'Offset' })
   @IsOptional()
   @Min(0)
-  offset: number;
+  readonly offset: number;
+
+  @ApiProperty({ description: 'Minimun price' })
+  @IsOptional()
+  @IsPositive()
+  readonly minPrice: number;
+
+  @ApiProperty({ description: 'Max price' })
+  // esto es posible mientras halla un precio minimo
+  @ValidateIf((item) => item.minPrice)
+  @IsPositive()
+  readonly maxPrice: number;
 }

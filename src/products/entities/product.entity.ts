@@ -7,11 +7,16 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  Index,
+  JoinColumn,
 } from 'typeorm';
 import { Brand } from './brand.entity';
 import { Category } from './category.entity';
 
 @Entity()
+@Index(['id', 'name'])
+// Creación de indices, pueden ser varios
+// @Index(['description', 'name'])
 export class Product {
   @PrimaryGeneratedColumn({ comment: 'Unique ID of the product table' })
   id: number;
@@ -68,9 +73,14 @@ export class Product {
   updateAt: Date;
 
   @ManyToOne(() => Brand, (brand) => brand.products)
+  @JoinColumn({ name: 'brand_id' })
   brand: Brand;
 
   @ManyToMany(() => Category, (category) => category.products)
-  @JoinTable({ name: 'categories_products' })
+  @JoinTable({
+    name: 'categories_products',
+    joinColumn: { name: 'product_id' },
+    inverseJoinColumn: { name: 'category_id' },
+  })
   categories: Category[];
 }

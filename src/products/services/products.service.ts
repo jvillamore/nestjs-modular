@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Between, FindOptionsWhere, In, Repository } from 'typeorm';
 
 import { Product } from './../entities/product.entity';
 import {
@@ -23,17 +23,21 @@ export class ProductsService {
 
   findAll(params?: FilterProductsDto) {
     // descontruimos los queries del params
-    const { limit, offset } = params;
-    if (params)
-      return this.productRep.find({
-        relations: ['brand', 'categories'],
-        // para enviar el limit, lo hacemos en la propiedad "take"
-        take: limit,
-        // para enviar el offset, lo hacemos en la propiedad "skip"
-        skip: offset,
-      });
+    const { limit, offset, maxPrice, minPrice } = params;
+    // será de tipo "FindOptionsWhere" en base a los atributos que tenga un producto
+    const where: FindOptionsWhere<Product> = {};
+    console.log(params);
+    // preguntamos si los parámetros existen
+    if (minPrice && maxPrice) {
+      // si existen
+      // el precio estara entre el precio minimo al precio máximo
+      where.price = Between(minPrice, maxPrice);
+    }
     return this.productRep.find({
-      relations: ['brand', 'categories'],
+      relations: ['brand'],
+      where, // añadimos el where a la consulta
+      take: limit,
+      skip: offset,
     });
   }
 
