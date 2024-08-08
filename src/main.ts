@@ -8,6 +8,10 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transformOptions: {
+        // habilitamos la conversión de parámetros de forma implicita
+        enableImplicitConversion: true,
+      },
     }),
   );
   const config = new DocumentBuilder()
